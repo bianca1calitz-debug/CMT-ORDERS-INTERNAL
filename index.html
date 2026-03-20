@@ -1,190 +1,408 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CMT Chemicals Internal Order Form</title>
+  <title>CMT Chemicals Internal Orders</title>
   <style>
     :root {
-      --accent: #e88ab5;
+      --bg: #fff7fb;
+      --panel: #ffffff;
+      --panel-soft: #fff0f7;
       --line: #f1cddd;
       --text: #4a3240;
       --muted: #866879;
+      --accent: #e88ab5;
+      --accent-dark: #d5689b;
+      --success: #dff4e8;
+      --warning: #fff1d8;
+      --danger: #fde1e7;
+      --shadow: 0 12px 30px rgba(206, 114, 158, 0.12);
+      --radius: 20px;
     }
 
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: Arial;
-      background: #fff8fc;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #fff8fc 0%, #fff2f8 100%);
       color: var(--text);
     }
 
-    .wrap { max-width: 1200px; margin: auto; padding: 20px; }
+    .wrap { max-width: 1250px; margin: 0 auto; padding: 24px; }
+
+    .hero {
+      background: linear-gradient(135deg, #ffe4f0, #fff8fc);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    h1 { margin: 0 0 6px; }
+    p { margin: 0; color: var(--muted); }
+
+    .grid { display: grid; grid-template-columns: 1.25fr 0.95fr; gap: 20px; }
 
     .card {
       background: white;
       border: 1px solid var(--line);
-      border-radius: 12px;
-      margin-bottom: 20px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
     }
 
     .card-header {
-      background: #ffe9f3;
-      padding: 10px;
+      padding: 14px 18px;
+      background: var(--panel-soft);
       font-weight: bold;
+      border-bottom: 1px solid var(--line);
     }
 
-    .card-body { padding: 15px; }
+    .card-body { padding: 18px; }
 
-    input, select {
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.9rem;
+      font-weight: bold;
+      display:block;
+      margin-bottom:4px;
+    }
+
+    input, select, textarea {
       width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border-radius: 8px;
+      padding: 10px;
+      border-radius: 10px;
       border: 1px solid #e9c7d8;
+      margin-top: 4px;
+      background: white;
+      color: var(--text);
     }
+
+    textarea { min-height: 86px; resize: vertical; }
 
     button {
       margin-top: 10px;
-      padding: 10px;
-      background: var(--accent);
-      color: white;
+      padding: 10px 14px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
+      font-weight: bold;
     }
+
+    .primary { background: var(--accent); color: white; }
+    .secondary { background: #f8dbe7; color: var(--text); }
+    .ghost { background: #fff4f8; color: var(--text); border: 1px solid #f1cddd; }
+
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
 
     table {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 10px;
     }
 
     th, td {
       padding: 10px;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid #f1cddd;
+      font-size: 0.9rem;
+      vertical-align: top;
     }
 
-    th { background: #ffe9f3; }
+    th { background: #ffe9f3; text-align: left; }
+
+    .status {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .summary-box {
+      background: #fffafd;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .summary-box small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .summary-box strong {
+      font-size: 1.25rem;
+    }
+
+    .products-wrap {
+      border: 1px solid #f1cddd;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .product-row {
+      display: grid;
+      grid-template-columns: 2.2fr 0.8fr 0.8fr 1fr 0.9fr auto;
+      gap: 10px;
+      padding: 12px;
+      border-bottom: 1px solid #f7dfe9;
+      align-items: end;
+      background: #fffdfd;
+    }
+
+    .product-row:last-child { border-bottom: none; }
+
+    .mini-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .line-total {
+      background: #fff4f8;
+      border: 1px solid #f1cddd;
+      border-radius: 10px;
+      padding: 10px;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .total-strip {
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: #fff4f8;
+      border: 1px solid #f1cddd;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-weight: bold;
+    }
+
+    .chart-card {
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fffafd;
+    }
+
+    .chart-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 1.6fr 3fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.88rem;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 16px;
+      border-radius: 999px;
+      background: #fdebf3;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ebb0ca, #e88ab5);
+      min-width: 6px;
+    }
+
+    .pill {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 0.78rem;
+      font-weight: bold;
+    }
+
+    .paid { background: var(--success); }
+    .pending { background: var(--warning); }
+    .overdue { background: var(--danger); }
+    .processing { background: var(--warning); }
+    .delivered { background: var(--success); }
+
+    .muted { color: var(--muted); }
+
+    @media (max-width: 1000px) {
+      .grid, .form-grid, .summary-grid { grid-template-columns: 1fr; }
+      .product-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-<div class="wrap">
+  <div class="wrap">
 
-  <div class="card">
-    <div class="card-header">Add Order</div>
-    <div class="card-body">
-      <form id="form">
-
-        <label>Purchase Order</label>
-        <input id="po" required>
-
-        <label>Date</label>
-        <input type="date" id="date" required>
-
-        <label>Customer</label>
-        <input id="customer" required>
-
-        <label>Product</label>
-        <input id="product" required>
-
-        <label>Quantity</label>
-        <input type="number" id="qty" required>
-
-        <label>Unit Price (R)</label>
-        <input type="number" step="0.01" id="price" required>
-
-        <label>VAT</label>
-        <select id="vat">
-          <option value="0">No VAT</option>
-          <option value="0.15">15% VAT</option>
-        </select>
-
-        <button>Save</button>
-      </form>
+    <div class="hero">
+      <h1>CMT Chemicals Internal Orders</h1>
+      <p> INTERNALS .</p>
     </div>
-  </div>
 
-  <div class="card">
-    <div class="card-header">Summary</div>
-    <div class="card-body">
-      <p>Total Orders: <span id="count">0</span></p>
-      <p>Total Value (Incl VAT): <span id="total">R 0.00</span></p>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header">Add Order</div>
+        <div class="card-body">
+          <form id="form">
+
+            <div class="form-grid">
+              <div>
+                <label for="po">Purchase Order</label>
+                <input id="po" required>
+              </div>
+
+              <div>
+                <label for="date">Date (DD/MM/YYYY)</label>
+                <input id="date" placeholder="DD/MM/YYYY" required>
+              </div>
+
+              <div class="full">
+                <label for="customer">Customer</label>
+                <input id="customer" required>
+              </div>
+
+              <div>
+                <label for="payment">Payment</label>
+                <select id="payment">
+                  <option>Pending</option>
+                  <option>Paid</option>
+                  <option>Overdue</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="delivery">Delivery</label>
+                <select id="delivery">
+                  <option>Processing</option>
+                  <option>Delivered</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="rep">Handled By</label>
+                <input id="rep">
+              </div>
+
+              <div>
+                <label for="due">Due Date (DD/MM/YYYY)</label>
+                <input id="due" placeholder="DD/MM/YYYY">
+              </div>
+
+              <div class="full">
+                <label for="notes">Notes</label>
+                <textarea id="notes"></textarea>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;">
+              <label>Products</label>
+              <div class="products-wrap" id="productsWrap"></div>
+              <div class="btn-row">
+                <button type="button" class="secondary" id="addProductBtn">+ Add Product</button>
+              </div>
+              <div class="total-strip">
+                <span>Total Products: <span id="productCount">1</span></span>
+                <span>Order Total: <span id="orderTotal">R 0.00</span></span>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <button type="submit" class="primary">Save</button>
+            </div>
+            <div class="status" id="status">Ready</div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Summary</div>
+        <div class="card-body">
+          <div class="summary-grid">
+            <div class="summary-box">
+              <small>Total Orders</small>
+              <strong id="count">0</strong>
+            </div>
+            <div class="summary-box">
+              <small>Total Value</small>
+              <strong id="total">R 0.00</strong>
+            </div>
+            <div class="summary-box">
+              <small>Top Customer</small>
+              <strong id="topCustomer">-</strong>
+            </div>
+            <div class="summary-box">
+              <small>Top Staff Member</small>
+              <strong id="topRep">-</strong>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Products We Sell The Most</div>
+            <div id="productsChart" class="muted">No data yet</div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Customers Who Buy The Most</div>
+            <div id="customersChart" class="muted">No data yet</div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Who Has The Most Orders</div>
+            <div id="repsChart" class="muted">No data yet</div>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </div>
 
-  <div class="card">
-    <div class="card-header">Orders</div>
-    <div class="card-body">
-      <table>
-        <thead>
-          <tr>
-            <th>PO</th>
-            <th>Customer</th>
-            <th>Total (Excl)</th>
-            <th>VAT</th>
-            <th>Total (Incl)</th>
-          </tr>
-        </thead>
-        <tbody id="table"></tbody>
-      </table>
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header">Orders</div>
+      <div class="card-body">
+        <table>
+          <thead>
+            <tr>
+              <th>Purchase Order</th>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Products</th>
+              <th>Handled By</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="table"></tbody>
+        </table>
+      </div>
     </div>
-  </div>
-
-</div>
-
-<script>
-const form = document.getElementById('form');
-const table = document.getElementById('table');
-
-function load(){
-  const data = JSON.parse(localStorage.getItem('cmt')||'[]');
-  let total=0;
-  table.innerHTML='';
-
-  data.forEach(d=>{
-    total+=d.totalIncl;
-    table.innerHTML+=`<tr>
-      <td>${d.po}</td>
-      <td>${d.customer}</td>
-      <td>R ${d.totalExcl.toFixed(2)}</td>
-      <td>R ${d.vatAmount.toFixed(2)}</td>
-      <td>R ${d.totalIncl.toFixed(2)}</td>
-    </tr>`;
-  });
-
-  document.getElementById('count').innerText=data.length;
-  document.getElementById('total').innerText='R '+total.toFixed(2);
-}
-
-form.onsubmit = e => {
-  e.preventDefault();
-  const data = JSON.parse(localStorage.getItem('cmt')||'[]');
-
-  const qty = Number(qty.value);
-  const price = Number(price.value);
-  const vatRate = Number(vat.value);
-
-  const totalExcl = qty * price;
-  const vatAmount = totalExcl * vatRate;
-  const totalIncl = totalExcl + vatAmount;
-
-  data.push({
-    po: po.value,
-    customer: customer.value,
-    totalExcl,
-    vatAmount,
-    totalIncl
-  });
-
-  localStorage.setItem('cmt',JSON.stringify(data));
-  form.reset();
-  load();
-}
-
-load();
-</script>
-
-</body>
-</html>
